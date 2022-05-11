@@ -1,0 +1,84 @@
+﻿@model IEnumerable<project1.Models.Auther>
+
+@{
+    ViewData["Title"] = "AutherList";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    Pagger pagger = new Pagger();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pagger = ViewBag.Pager;
+        pageNo = pagger.CurrentPage;
+    }
+}
+
+<h1>AutherList</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"> Add Auther +</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>
+    <a asp-action="Export" class="btn btn-success" >Export To Excel Sheet</a>
+</p>
+<div class="container">
+    @if (pagger.TotalPage > 0)
+    {
+        <ul class="pagination justify-content-end">
+
+            @for (var page = pagger.StartPage; page <= pagger.EndPage; page++)
+            {
+                <li class="page-item @(page == pagger.CurrentPage? "active" : "")">
+
+                    <a class="page-link" asp-controller="Auther" asp-action="AutherList" asp-route-page="@(page)"> @(page)</a>
+                </li>
+            }
+            @if (pagger.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Auther" asp-action="AutherList" asp-route-page="@(pagger.StartPage)">First</a>
+                </li>
+                <li class="page-item">
+
+                    <a class="page-link" asp-controller="Auther" asp-action="AutherList" asp-route-page="@(pagger.CurrentPage -1)">Previous</a>
+                </li>
+            }
+            @if (pagger.CurrentPage < pagger.TotalPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Auther" asp-action="AutherList" asp-route-page="@(pagger.CurrentPage +1)">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Auther" asp-action="AutherList" asp-route-page="@(pagger.TotalPage)">Last</a>
+                </li>
+            }
+        </ul>
+    }
+
+
+</div>

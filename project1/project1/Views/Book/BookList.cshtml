@@ -1,0 +1,115 @@
+﻿@model IEnumerable<project1.Models.Books>
+
+@{
+    ViewData["Title"] = "BookList";
+    Pagger pagger = new Pagger();
+    int pageNo = 0;
+    if(ViewBag.Pager !=null)
+    {
+        pagger = ViewBag.Pager;
+        pageNo = pagger.CurrentPage;
+    }
+}
+
+<h1>BookList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.autherId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.autherId)
+            </td>
+            @if (item.Image != null)
+            {
+                <td><img src="~/images/@item.Image" height="60" width="60" class="img-thumbnail" /></td>
+            }
+            else
+            {
+                <td><img src="~/images/cofe.jpg" height="60" width="60" class="img-thumbnail" /></td>
+
+
+            }
+            <td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<p>
+    <a asp-action="Export">Export New</a>
+</p>
+<div class="container">
+    @if(pagger.TotalPage >0)
+            {
+    <ul class="pagination justify-content-end">
+
+        @for (var page = pagger.StartPage; page <= pagger.EndPage; page++)
+        {
+            <li class="page-item @(page == pagger.CurrentPage? "active" : "")">
+
+                <a class="page-link" asp-controller="Book" asp-action="BookList" asp-route-page="@(page)"> @(page)</a>
+            </li>
+        }
+        @if (pagger.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-controller="Book" asp-action="BookList" asp-route-page="@(pagger.StartPage)">First</a>
+            </li>
+            <li class="page-item">
+
+                <a class="page-link" asp-controller="Book" asp-action="BookList" asp-route-page="@(pagger.CurrentPage -1)">Previous</a>
+            </li>
+        }
+        @if (pagger.CurrentPage < pagger.TotalPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-controller="Book" asp-action="BookList" asp-route-page="@(pagger.CurrentPage +1)">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" asp-controller="Book" asp-action="BookList" asp-route-page="@(pagger.TotalPage)">Last</a>
+            </li>
+        }
+    </ul>
+            }
+
+
+</div>
